@@ -33,7 +33,7 @@ histogram(sumByDateBeforeFilling$V1,
 
 ![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
   
-Calculating the **mean** and the**median** of total number of steps taken per day:
+Calculating the **mean** and the **median** of total number of steps taken per day:
 
 ```r
 meanSteps = mean(sumByDateBeforeFilling$V1)

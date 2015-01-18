@@ -34,7 +34,7 @@ histogram(sumByDateBeforeFilling$V1,
      xlab="Number of steps")
 ```
   
-Calculating the **mean** and the**median** of total number of steps taken per day:
+Calculating the **mean** and the **median** of total number of steps taken per day:
 ```{r}
 meanSteps = mean(sumByDateBeforeFilling$V1)
 medianSteps = median(sumByDateBeforeFilling$V1)
