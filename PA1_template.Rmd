@@ -30,16 +30,19 @@ A histogram of the total number of steps taken each day
 ```{r}
 sumByDateBeforeFilling <- dataWithoutNA[, sum(steps), by=date]
 histogram(sumByDateBeforeFilling$V1,
-     main="Histogram of the total number of steps taken each day",
-     xlab="Number of steps for each day")
+     main="Histogram of total number of steps for each day",
+     xlab="Number of steps")
 ```
   
-The **mean** and **median** of total number of steps taken per day
+Calculating the **mean** and the**median** of total number of steps taken per day:
 ```{r}
-paste("mean = ", mean(sumByDateBeforeFilling$V1))
-paste("median=", median(sumByDateBeforeFilling$V1))
+meanSteps = mean(sumByDateBeforeFilling$V1)
+medianSteps = median(sumByDateBeforeFilling$V1)
 ```
-
+  
+The mean of the steps is `r format(meanSteps)`.  
+The median is equal to `r medianSteps`.  
+  
 ## What is the average daily activity pattern?
 Time series plot  of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
 ```{r}
@@ -47,23 +50,24 @@ meanByInterval = dataWithoutNA[, mean(steps), by=interval]
 xyplot(V1~interval,
     data=meanByInterval,
     type='l',
-    main="Time series plot of the 5-minute interval\n and the average number of steps taken,\n averaged across all days",
+    main="Average number of steps for each interval across all days",
     xlab="Interval",
-    ylab="Average number of steps across all days")
+    ylab="Average number of steps")
 ```
   
 Finding 5-minute interval, on average across all the days in the dataset, which contains the maximum number of steps:
 ```{r}
-paste("interval with max steps =", meanByInterval$interval[which.max(meanByInterval$V1)])
+maxStepsInterval = meanByInterval$interval[which.max(meanByInterval$V1)]
 ```
-
-
+The interval with maximum steps number is `r maxStepsInterval`.  
+  
 ## Imputing missing values
-Calculating the total number of missing values in the dataset
+Calculating the total number of missing values in the dataset:
 ```{r}
-paste("number of missing values = ", sum(!complete.cases(raw)))
+uncompleteCasesTotal = sum(!complete.cases(raw))
 ```
-
+There are `r uncompleteCasesTotal` missing values.  
+   
 ###Strategy of imputing
 To fill in all of the missing values in the dataset we will do the following: 
  for the row with a missing value we use mean of steps for its interval.
@@ -84,14 +88,18 @@ dataWithFilledNAs <- data.table(steps=mapply(fill, raw$steps, raw$meanSteps),
 ```
   
 Making a histogram of the total number of steps taken each day and calculating the **mean** and **median** total number of steps taken per day. These values differ from the estimates from the first part of the assignment. 
+
 ```{r}
 sumByDateAfterFilling <- dataWithFilledNAs[, sum(steps), by=date]
 histogram(sumByDateAfterFilling$V1,
-     main="Histogram of the total number of steps taken each day\n after filling NA values",
+     main="Histogram of the total number of steps for each day\n after filling in NA values",
      xlab="Number of steps for each day")
-paste("mean = ", mean(sumByDateAfterFilling$V1))
-paste("median=", median(sumByDateAfterFilling$V1))
+meanAfterFilling = mean(sumByDateAfterFilling$V1)
+medianAfterFilling = median(sumByDateAfterFilling$V1)
 ```
+  
+The new mean is `r format(meanAfterFilling)` which is slightly smaller comparing to the old mean `r format(meanSteps)`.  
+The new median is `r medianAfterFilling`. The old median was also greater: `r medianSteps`.
   
 ## Are there differences in activity patterns between weekdays and weekends?
 ```{r}
@@ -110,7 +118,7 @@ meanByIntervalAfterFilling = dataWithFilledNAs[, mean(steps), by=list(interval,d
 
 xyplot(V1~interval|dayType,
      data=meanByIntervalAfterFilling,
-     main="Time series plot of the 5-minute interval\n and the average number of steps taken,\n averaged across all days\nafter filling in NA values",
+     main="The average number of steps for each interval\n across all days after filling in NA values",
      xlab="Interval",
      ylab="Number of steps",
      layout=c(1,2),

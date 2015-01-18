@@ -1,10 +1,5 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-author: "Ilmira Shaim"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
+Ilmira Shaim  
 
 ## Version info
 R version 3.1.2 (2014-10-31)  
@@ -32,30 +27,22 @@ A histogram of the total number of steps taken each day
 ```r
 sumByDateBeforeFilling <- dataWithoutNA[, sum(steps), by=date]
 histogram(sumByDateBeforeFilling$V1,
-     main="Histogram of the total number of steps taken each day",
-     xlab="Number of steps for each day")
+     main="Histogram of total number of steps for each day",
+     xlab="Number of steps")
 ```
 
-![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
   
-The **mean** and **median** of total number of steps taken per day
+Calculating the **mean** and the**median** of total number of steps taken per day:
 
 ```r
-paste("mean = ", mean(sumByDateBeforeFilling$V1))
+meanSteps = mean(sumByDateBeforeFilling$V1)
+medianSteps = median(sumByDateBeforeFilling$V1)
 ```
-
-```
-## [1] "mean =  10766.1886792453"
-```
-
-```r
-paste("median=", median(sumByDateBeforeFilling$V1))
-```
-
-```
-## [1] "median= 10765"
-```
-
+  
+The mean of the steps is 10766.19.  
+The median is equal to 10765.  
+  
 ## What is the average daily activity pattern?
 Time series plot  of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
 
@@ -64,35 +51,28 @@ meanByInterval = dataWithoutNA[, mean(steps), by=interval]
 xyplot(V1~interval,
     data=meanByInterval,
     type='l',
-    main="Time series plot of the 5-minute interval\n and the average number of steps taken,\n averaged across all days",
+    main="Average number of steps for each interval across all days",
     xlab="Interval",
-    ylab="Average number of steps across all days")
+    ylab="Average number of steps")
 ```
 
-![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
   
 Finding 5-minute interval, on average across all the days in the dataset, which contains the maximum number of steps:
 
 ```r
-paste("interval with max steps =", meanByInterval$interval[which.max(meanByInterval$V1)])
+maxStepsInterval = meanByInterval$interval[which.max(meanByInterval$V1)]
 ```
-
-```
-## [1] "interval with max steps = 835"
-```
-
-
+The interval with maximum steps number is 835.  
+  
 ## Imputing missing values
-Calculating the total number of missing values in the dataset
+Calculating the total number of missing values in the dataset:
 
 ```r
-paste("number of missing values = ", sum(!complete.cases(raw)))
+uncompleteCasesTotal = sum(!complete.cases(raw))
 ```
-
-```
-## [1] "number of missing values =  2304"
-```
-
+There are 2304 missing values.  
+   
 ###Strategy of imputing
 To fill in all of the missing values in the dataset we will do the following: 
  for the row with a missing value we use mean of steps for its interval.
@@ -115,30 +95,23 @@ dataWithFilledNAs <- data.table(steps=mapply(fill, raw$steps, raw$meanSteps),
   
 Making a histogram of the total number of steps taken each day and calculating the **mean** and **median** total number of steps taken per day. These values differ from the estimates from the first part of the assignment. 
 
+
 ```r
 sumByDateAfterFilling <- dataWithFilledNAs[, sum(steps), by=date]
 histogram(sumByDateAfterFilling$V1,
-     main="Histogram of the total number of steps taken each day\n after filling NA values",
+     main="Histogram of the total number of steps for each day\n after filling in NA values",
      xlab="Number of steps for each day")
 ```
 
-![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-8-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-8-1.png) 
 
 ```r
-paste("mean = ", mean(sumByDateAfterFilling$V1))
+meanAfterFilling = mean(sumByDateAfterFilling$V1)
+medianAfterFilling = median(sumByDateAfterFilling$V1)
 ```
-
-```
-## [1] "mean =  10749.7704918033"
-```
-
-```r
-paste("median=", median(sumByDateAfterFilling$V1))
-```
-
-```
-## [1] "median= 10641"
-```
+  
+The new mean is 10749.77 which is slightly smaller comparing to the old mean 10766.19.  
+The new median is 10641. The old median was also greater: 10765.
   
 ## Are there differences in activity patterns between weekdays and weekends?
 
@@ -158,13 +131,13 @@ meanByIntervalAfterFilling = dataWithFilledNAs[, mean(steps), by=list(interval,d
 
 xyplot(V1~interval|dayType,
      data=meanByIntervalAfterFilling,
-     main="Time series plot of the 5-minute interval\n and the average number of steps taken,\n averaged across all days\nafter filling in NA values",
+     main="The average number of steps for each interval\n across all days after filling in NA values",
      xlab="Interval",
      ylab="Number of steps",
      layout=c(1,2),
      type="l")
 ```
 
-![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-9-1.png) 
 
 We can see, that in the morning of workdays the number of steps is very high. But on average the number of steps during workday is less than at weekend.
